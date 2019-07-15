@@ -1,0 +1,5 @@
+---
+- name: Saving IPTables Rules
+  command: service netfilter-persistent save
+  become: true
+  listen: "save iptables"

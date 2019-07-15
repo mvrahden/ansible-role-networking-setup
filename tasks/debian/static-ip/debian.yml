@@ -36,7 +36,7 @@
   # is "True" when at least one state 'changed'
   # "_interface_profiles_status" variable is single point of truth
   register: _interface_profiles_status
-  changed_when: _interface_profiles_status['msg'] != false
+  changed_when: _interface_profiles_status['msg']
 
 - name: Restart NetworkManager
   service:

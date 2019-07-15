@@ -21,7 +21,8 @@
   vars:
     _interface_profiles: "{{ networking_interface_profiles | mandatory }}"
     _interfaces: "{{ networking_device_interfaces }}"
-  when: ansible_os_family == "Debian"
+  when: >
+    ansible_os_family == "Debian"
     and 'interfaces' in subtasks
 
 - name: Set Hostname
@@ -30,7 +31,8 @@
   vars:
     _domain: "{{ domain | mandatory }}"
     _interfaces: "{{ networking_device_interfaces }}"
-  when: ansible_os_family == "Debian"
+  when: >
+    ansible_os_family == "Debian"
     and 'hostname' in subtasks
 
 - name: Set netfilter and iptables definitions

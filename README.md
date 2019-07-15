@@ -19,9 +19,9 @@ This package provides 3 "subtask" functionalities.
 Each functionality can be addressed by adding it to the `subtasks`-list (e.g. `subtasks: [ 'interfaces' ]`).
 The functionality values are as follows:
 
-  - 'interfaces' - sets the network interface definitions
-  - 'hostname' - sets the hostname
-  - 'netfilter' - sets iptables definitions
+- `'interfaces'` - sets the network interface definitions
+- `'hostname'` - sets the hostname, and statically cross-references all other hosts from the `networking_host_group` via the `/etc/hosts`-file
+- `'netfilter'` - sets iptables definitions
 
 ## Role Variables
 
@@ -35,13 +35,15 @@ This is a list of interface profile definitions, which will be translated into t
 - NetworkManager
 - Netplan
 
+This is the structure of the profile definitions:
+
 ```yaml
 # profiles
 networking_interface_profiles:
-  - type: iface               # required;
-    interface: lo             # required;
-    address_family: inet      # required; or inet6 or ipx
-    address_method: loopback  # required; or dhcp
+  - type: iface
+    interface: lo
+    address_family: inet      # or inet6 or ipx
+    address_method: loopback  # or dhcp
     auto: lo                  # optional; manpage interfaces(5)
   - type: iface
     interface: eth0

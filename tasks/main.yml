@@ -29,7 +29,7 @@
   include_tasks: 
     file: debian/networking-set-hostname.yml
   vars:
-    _domain: "{{ domain | mandatory }}"
+    _domain: "{{ networking_domain | mandatory }}"
     _interfaces: "{{ networking_device_interfaces }}"
   when: >
     ansible_os_family == "Debian"

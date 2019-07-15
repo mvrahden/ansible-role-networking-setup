@@ -4,9 +4,9 @@ subtasks: []  # no tasks will be performed by default
 # - hostname
 # - netfilter
 
-networking_domain: example.com  # FQDN
+networking_group_domain: example.com  # FQDN
 
-networking_host_group: all  # inventory group name of cross-referenced devices
+networking_group: all  # inventory group name of cross-referenced devices
 
 # List of interfaces that will be configured
 networking_device_interfaces: [ 'eth0' ]

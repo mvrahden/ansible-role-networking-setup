@@ -29,8 +29,9 @@
   include_tasks: 
     file: debian/networking-set-hostname.yml
   vars:
-    _domain: "{{ networking_domain | mandatory }}"
+    _domain: "{{ networking_group_domain | mandatory }}"
     _interfaces: "{{ networking_device_interfaces }}"
+    _host_group: "{{ networking_group }}"
   when: >
     ansible_os_family == "Debian"
     and 'hostname' in subtasks

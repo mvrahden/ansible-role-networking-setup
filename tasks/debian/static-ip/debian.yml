@@ -1,0 +1,45 @@
+---
+## Using NetworkManager and "/etc/networking/interfaces"
+- name: Set interfaces profiles for any other type of Debian-based release
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    mode: 0644
+  become: true
+  register: _static_ip_interfaces
+
+- name: Set NetworkManager configuration > managed=true
+  # see Special Case for NM: https://wiki.debian.org/NetworkManager#Wired_Networks_are_Unmanaged
+  # and solution to activate NM: https://wiki.debian.org/NetworkManager#Enabling_Interface_Management
+  template:
+    src: NetworkManager.conf.j2
+    dest: /etc/NetworkManager/NetworkManager.conf
+    mode: 0644
+  become: true
+  register: _static_ip_NetworkManager
+
+- name: Stop dhcpcd from managing leases for {{ _interfaces }}
+  vars:
+    _dhcpcd:
+      # concat interfaces to list without empty strings
+      denyinterfaces: "{{ _interfaces }}"
+  template:
+    src: dhcpcd.conf.j2
+    dest: /etc/dhcpcd.conf
+    mode: 0644
+  become: true
+  register: _static_ip_dhcpcd
+
+- name: Check whether interface profile files have changed
+  debug:
+    msg: "{{ _static_ip_interfaces['changed'] or _static_ip_NetworkManager['changed'] or _static_ip_dhcpcd['changed'] }}"
+  # is "True" when at least one state 'changed'
+  # "_interface_profiles_status" variable is single point of truth
+  register: _interface_profiles_status
+  changed_when: _interface_profiles_status['msg'] != false
+
+- name: Restart NetworkManager
+  service:
+    name: NetworkManager
+    state: restarted
+  when: _interface_profiles_status['changed']|bool

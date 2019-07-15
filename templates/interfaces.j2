@@ -1,0 +1,48 @@
+{{ ansible_managed|comment }}
+{# transpiles to /etc/network/interfaces #}
+
+{# TODO #}
+{# - "auto"-lines #}
+{# - "allow-*"-lines #}
+{# - "no-auto-down"-lines #}
+{# - "no-scripts"-lines #}
+{# - "mapping"-stanzas #}
+
+{% for profile in _interface_profiles %}
+{% if profile.allow_hotplug is defined %}
+allow-hotplug {{ profile.allow_hotplug }}
+{% endif %}
+{% if profile.auto is defined %}
+auto {{ profile.auto }}
+{% endif %}
+
+{% if profile.type == 'mapping' %}
+  {# not yet implemented #}
+{% endif %}
+{% if profile.type == 'iface' %}
+{{ profile.type }} {{ profile.interface }} {{ profile.address_family }} {{ profile.address_method }}
+{% endif %}
+{% if profile.vlan_raw_device is defined %}
+  vlan-raw-device {{ profile.vlan_raw_device }}
+{% endif %}
+{% if profile.address is defined %}
+  address {{ profile.address }}
+{% endif %}
+{% if profile.netmask is defined %}
+  netmask {{ profile.netmask }}
+{% endif %}
+{% if profile.network is defined %}
+  network {{ profile.network }}
+{% endif %}
+{% if profile.broadcast is defined %}
+  broadcast {{ profile.broadcast }}
+{% endif %}
+{% if profile.gateway is defined %}
+  gateway {{ profile.gateway }}
+{% endif %}
+{% if profile.dns_nameservers is defined %}
+  dns-nameservers {{ profile.dns_nameservers | join(' ') }}
+{% endif %}
+
+
+{% endfor %}

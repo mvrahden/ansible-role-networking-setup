@@ -1,0 +1,9 @@
+{{ ansible_managed|comment }}
+[main]
+plugins=ifupdown,keyfile
+{# important: this ensures to use neither dhclient nor dhcpcd for dhcp leases! #}
+dhcp=internal
+
+[ifupdown]
+{# this is necessary: https://wiki.debian.org/NetworkManager#Enabling_Interface_Management #}
+managed=true

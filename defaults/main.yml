@@ -1,0 +1,30 @@
+---
+subtasks: []  # no tasks will be performed by default
+# - interfaces
+# - hostname
+# - netfilter
+
+networking_domain: example.com  # FQDN
+
+# List of interfaces that will be configured
+networking_device_interfaces: [ 'eth0' ]
+
+# are vlan interfaces being configured? (will install vlan package)
+networking_use_vlan: false
+
+# profiles 
+# _interface_profiles: "{{ interface_profiles | mandatory }}"
+networking_interface_profiles:
+  - type: iface
+    auto: lo
+    interface: lo
+    address_family: inet      # or inet6 or ipx
+    address_method: loopback  # or dhcp
+  - type: iface
+    auto: eth0
+    allow_hotplug: eth0
+    interface: eth0
+    address_family: inet            # or inet6 or ipx
+    address_method: dhcp            # or dhcp
+
+networking_iptables_definitions: # undefined by default

@@ -1,0 +1,61 @@
+{{ ansible_managed|comment }}
+
+# Allow users of this group to interact with dhcpcd via the control socket.
+#controlgroup wheel
+
+# Inform the DHCP server of our hostname for DDNS.
+hostname
+
+# Use the hardware address of the interface for the Client ID.
+#clientid
+# or
+# Use the same DUID + IAID as set in DHCPv6 for DHCPv4 ClientID as per RFC4361.
+# Some non-RFC compliant DHCP servers do not reply with this set.
+# In this case, comment out duid and enable clientid above.
+#duid
+{# NOTE: clientid and duid swapped from default config #}
+{# NOTE: Use clientid, because it uses MAC addresses #}
+clientid
+
+# Persist interface configuration when dhcpcd exits.
+persistent
+
+# Rapid commit support.
+# Safe to enable by default because it requires the equivalent option set
+# on the server to actually work.
+option rapid_commit
+
+# A list of options to request from the DHCP server.
+option domain_name_servers, domain_name, domain_search, host_name
+option classless_static_routes
+# Most distributions have NTP support.
+option ntp_servers
+# Respect the network MTU. This is applied to DHCP routes.
+option interface_mtu
+
+# A ServerID is required by RFC2131.
+require dhcp_server_identifier
+
+# Generate Stable Private IPv6 Addresses instead of hardware based ones
+slaac private
+
+{% if _dhcpcd['denyinterfaces'] is defined %}
+{# denyinterfaces is defined through tasks/debian/static-ip/debian.yml and defaults to eth0 #}
+denyinterfaces {{ _dhcpcd['denyinterfaces'] | join(' ') }}
+{% endif %}
+
+{% if _dhcpcd['interface_profiles'] is defined %}
+{% for profile in _dhcpcd['interface_profiles'] %}
+interface {{ profile.interface }}
+{% if profile.cidr_notation is defined %}
+static ip_address={{ profile.cidr_notation }}
+{% endif %}
+{% if profile.gateway is defined %}
+static routers={{ profile.gateway }}
+{% endif %}
+{% if profile.dns_nameservers is defined %}
+static domain_name_servers={{ profile.dns_nameservers | join(' ') }}
+{% endif %}
+
+{% endfor %}
+{% endif %}

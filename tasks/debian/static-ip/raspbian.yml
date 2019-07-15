@@ -1,0 +1,13 @@
+---
+- name: Set Static IP for Raspbian systems
+  ## Raspbian uses /etc/dhcpcd.conf
+  vars:
+    _dhcpcd:
+      interface_profiles: "{{ _interface_profiles }}"
+  template:
+    src: dhcpcd.conf.j2
+    dest: /etc/dhcpcd.conf
+    mode: 0644
+    backup: true
+  become: true
+  register: _interface_profiles_status

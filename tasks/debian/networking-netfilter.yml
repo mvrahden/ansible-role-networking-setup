@@ -1,0 +1,40 @@
+---
+- name: Installing iptables-persistent
+  apt:
+    name: iptables-persistent
+    state: present
+  become: true
+
+- name: Ensure netfilter-persistent is enabled and starts on reboot
+  service:
+    name: netfilter-persistent
+    enabled: true
+  become: true
+  
+- name: Setup IP Forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+  become: true
+
+- debug:
+    var: _iptables_definitions
+
+- name: Configuring iptables
+  iptables:
+    table: "{{ item['table'] | default(omit) }}"
+    chain: "{{ item['chain'] | default(omit) }}"
+    ctstate: "{{ item['ctstate'] | default(omit) }}"
+    source: "{{ item['source'] | default(omit) }}"
+    in_interface: "{{ item['in_interface'] | default(omit) }}"
+    out_interface: "{{ item['out_interface'] | default(omit) }}"
+    jump: "{{ item['jump'] | default(omit) }}"
+    state: "{{ item['state'] | default(omit) }}"
+  become: true
+  register: _iptables_configured
+  with_items: "{{ _iptables_definitions }}"
+
+- name: Saving IPTables Rules
+  command: service netfilter-persistent save
+  become: true
+  when: _iptables_configured['changed']

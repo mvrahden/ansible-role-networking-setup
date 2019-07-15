@@ -4,7 +4,7 @@
 127.0.1.1 {{ inventory_hostname }}
 
 {# Add all clustered devices #}
-{% for host in groups['all'] %}
+{% for host in groups[ networking_host_group ] %}
 {# Add VLAN ipv4 if they exist #}
 {% for interface in _interfaces %}
 {% if hostvars[host]['ansible_' + interface ] is defined %}

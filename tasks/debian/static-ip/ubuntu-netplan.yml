@@ -9,5 +9,5 @@
   register: _interface_profiles_status
 
 - name: Apply changes on Netplan
-  shell: netplan apply
+  command: netplan apply
   when: _interface_profiles_status['changed']

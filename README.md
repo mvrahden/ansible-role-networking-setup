@@ -8,6 +8,9 @@ An [Ansible](https://www.ansible.com) role to define static IPs, set hostnames a
 - [Role Variables](#Role-Variables)
   - [Networking Interface Profiles](#Networking-Interface-Profiles)
   - [iptable definitions](#iptable-definitions)
+  - [Sample Roles](#Sample-Roles)
+    - [Static IPs](#Static-IPs)
+    - [Hostname](#Hostname)
 - [Dependencies](#Dependencies)
   - [Requirements](#Requirements)
 - [License](#License)
@@ -86,6 +89,37 @@ networking_iptables_definitions:
     source: 192.168.1.0/24
     state: present
     table: nat
+```
+
+### Sample Roles
+
+Assuming you have the variable `networking_interface_profiles` defined.
+
+#### Static IPs
+
+Setup static IPs as follows:
+
+> Attention: This Subtasks ends with a Reboot!
+
+```yaml
+  roles:
+    - role: mvrahden.networking-setup
+      subtasks: [ 'interfaces' ]
+      networking_device_interfaces: [ 'eth0' ]
+      networking_interface_profiles: "{{ my_awesome_interface_profiles }}"
+```
+
+#### Hostname
+
+Setup hostnames and 
+
+```yaml
+  roles:
+    - role: mvrahden.networking-setup
+      subtasks: [ 'hostname' ]
+      networking_group: my_clustered_hosts
+      networking_group_domain: example.com
+      networking_device_interfaces: "{{ my_awesome_interface_profiles }}"
 ```
 
 ## Dependencies

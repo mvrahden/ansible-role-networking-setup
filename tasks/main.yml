@@ -52,13 +52,23 @@
     - "hostsfile status: {{ _hostsfile | default('None') }}"
     - "network interfaces status: {{ _interface_profiles_status | default('None') }}"
 
-- name: Reboot
+- name: Reboot and wait for connection
+  reboot:
+    pre_reboot_delay: 5
+    post_reboot_delay: 10
+  when: >
+    'interfaces' not in subtasks
+    and (
+      (_hostname['changed']|default(false))
+      or (_hostsfile['changed']|default(false))
+    )
+
+- name: Reboot and continue
   shell: sleep 5 && reboot
   async: 1
   poll: 0
   register: _reboot
   notify: [ 'wait for reboot' ]
   when: >
-    (_hostname['changed']|default(false))
-    or (_hostsfile['changed']|default(false))
-    or (_interface_profiles_status['changed']|default(false))
+    'interfaces' in subtasks
+    and (_interface_profiles_status['changed']|default(false))

@@ -116,7 +116,7 @@ Setup hostnames as follows:
   roles:
     - role: mvrahden.networking-setup
       subtasks: [ 'hostname' ]
-      networking_group: my_clustered_hosts
+      networking_group_name: my_clustered_hosts # inventory name
       networking_group_domain: example.com
       networking_device_interfaces: "{{ my_awesome_interface_profiles }}"
 ```

@@ -6,7 +6,7 @@ subtasks: []  # no tasks will be performed by default
 
 networking_group_domain: example.com  # FQDN
 
-networking_group: all  # inventory group name of cross-referenced devices
+networking_group_name: all  # inventory group name for cross-referenced devices
 
 # List of interfaces that will be configured, e.g. as per default [ 'eth0' ]
 networking_device_interfaces: "{{ networking_interface_profiles | map(attribute='interface') | difference([ 'lo' ]) | list }}"

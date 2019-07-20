@@ -9,7 +9,7 @@ An [Ansible](https://www.ansible.com) role to define static IPs, set hostnames a
   - [Networking Interface Profiles](#Networking-Interface-Profiles)
   - [iptable definitions](#iptable-definitions)
   - [Sample Roles](#Sample-Roles)
-    - [Static IPs](#Static-IPs)
+    - [Network interfaces and Static IPs](#Network-interfaces-and-Static-IPs)
     - [Hostname](#Hostname)
 - [Dependencies](#Dependencies)
   - [Requirements](#Requirements)
@@ -22,8 +22,8 @@ This package provides 3 "subtask" functionalities.
 Each functionality can be addressed by adding it to the `subtasks`-list (e.g. `subtasks: [ 'interfaces' ]`).
 The functionality values are as follows:
 
-- `'interfaces'` - sets the network interface definitions
-- `'hostname'` - sets the hostname, and statically cross-references all other hosts from the `networking_host_group` via the `/etc/hosts`-file
+- `'interfaces'` - sets the network interface definitions based on given **interface profiles**, hence e.g. static IPs, dns-server, routing etc.
+- `'hostname'` - sets the hostname, and statically cross-references all other hosts from the `networking_group_name` via the `/etc/hosts`-file
 - `'netfilter'` - sets iptables definitions
 
 ## Role Variables
@@ -95,7 +95,7 @@ networking_iptables_definitions:
 
 Assuming you have the variable `networking_interface_profiles` defined.
 
-#### Static IPs
+#### Network interfaces and Static IPs
 
 Setup static IPs as follows:
 
@@ -105,13 +105,12 @@ Setup static IPs as follows:
   roles:
     - role: mvrahden.networking-setup
       subtasks: [ 'interfaces' ]
-      networking_device_interfaces: [ 'eth0' ]
       networking_interface_profiles: "{{ my_awesome_interface_profiles }}"
 ```
 
 #### Hostname
 
-Setup hostnames and 
+Setup hostnames as follows:
 
 ```yaml
   roles:

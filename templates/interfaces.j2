@@ -1,6 +1,5 @@
 {{ ansible_managed|comment }}
 {# transpiles to /etc/network/interfaces #}
-
 {# TODO #}
 {# - "auto"-lines #}
 {# - "allow-*"-lines #}
@@ -19,7 +18,7 @@ auto {{ profile.auto }}
 {% if profile.type == 'mapping' %}
   {# not yet implemented #}
 {% endif %}
-{% if profile.type == 'iface' %}
+{% if profile.type == 'iface' and profile.interface is defined and profile.address_family is defined and profile.address_method is defined %}
 {{ profile.type }} {{ profile.interface }} {{ profile.address_family }} {{ profile.address_method }}
 {% endif %}
 {% if profile.vlan_raw_device is defined %}

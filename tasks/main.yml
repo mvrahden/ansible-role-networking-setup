@@ -67,8 +67,6 @@
   shell: sleep 5 && reboot
   async: 1
   poll: 0
-  register: _reboot
-  notify: [ 'wait for reboot' ]
   when: >
     'interfaces' in subtasks
     and (_interface_profiles_status['changed']|default(false))

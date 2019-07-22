@@ -26,6 +26,10 @@ The functionality values are as follows:
 - `'hostname'` - sets the hostname, and statically cross-references all other hosts from the `networking_group_name` via the `/etc/hosts`-file
 - `'netfilter'` - sets iptables definitions
 
+The role performs a reboot of the hosts **after all (sub)tasks of the role** have been performed successfully.
+This helps in updating the network environment of the host.
+To **avoid or bypass** this **reboot** behavior, set the `perform_reboot` flag to `false`.
+
 ## Role Variables
 
 [defaults/main.yml](defaults/main.yml)

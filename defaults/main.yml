@@ -1,4 +1,5 @@
 ---
+perform_reboot: true  # whether or not to automatically reboot hosts after role has been played
 subtasks: []  # no tasks will be performed by default
 # - interfaces
 # - hostname
